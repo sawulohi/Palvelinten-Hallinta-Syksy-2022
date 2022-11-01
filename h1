@@ -1,0 +1,100 @@
+x)
+https://terokarvinen.com/2020/command-line-basics-revisited/
+  - Kertausta käytetyimpiin komentorivin komentoihin (pwd, ls, mv, cp, sudo apt-get update/upgrade etc.)
+  - Itselle uutta oli historian selaaminen ja etsiminen (ctrl + r), tämä erityisesti muistiin
+  - Tärkeimpien hakemistojen sisällöt pääpiirteittäin
+
+https://terokarvinen.com/2018/salt-states-i-want-my-computers-like-this/
+  - Pikaohjeet Salttiin
+  - Luo kansio ohjetiedostoille:
+    $ sudo mkdir -p /srv/salt/
+  - statet (tilat joihin halutaan) luodaan .sls-tiedostoilla, kielenä YAML
+  - staten käyttöönotto yksittäisellä komentorivillä:
+    $ sudo salt '*' state.apply $STATE
+  - $STATE tilalle haluttu state (.sls)
+  -.sls tiedostoja voi automatisoida top.sls-tiedostolla, orjat toteuttavat tätä säännöllisesti
+
+https://terokarvinen.com/2006/raportin-kirjoittaminen-4/?fromSearch=raportin%20kirjoittaminen
+  - Raportointiohjeet
+  - Tärkeintä: 
+    - toistettavuus (kuka tahansa voi replikoida testauksen)
+    - täsmällisyys (merkitse ylös aivan kaikki tehty, mielellään kellonaikojen & onnistumisten/epäonnistumisten kanssa)
+    - Helppolukuisuus (jäsentely, virheettömyys)
+
+--
+
+Testaukset tehty VirtualBoxilla ajetulla virtuaalikoneella, käyttöjärjestelmänä Ubuntu 22.04 LTS-versiolla
+
+Käyttöjärjestelmän lisäksi tehtävien tekemiseen tarvitaan Salt, katso ohjeet:
+https://terokarvinen.com/2018/salt-quickstart-salt-stack-master-and-slave-on-ubuntu-linux/
+  $ sudo apt-get update
+  $ sudo apt-get -y install salt-master
+  $ sudo apt-get -y install salt-minion
+arkistin oman osoitteeni seuraavaksi:
+  $ hostname -I
+Lisäsin nämä saltin configeihin:
+  $ sudoedit /etc/salt/minion
+Lisäsin seuraavat rivit, $HOSTNAME on hostname-komennosta saatu tieto:
+  master: $HOSTNAME
+  id: slave1
+Seuraavaksi hyväksyin salt-avaimen:
+  $ sudo salt-key -A
+  The following keys are going to be accepted:
+  Unaccepted Keys:
+  slave1
+  Proceed? [n/Y] Y
+  Key for minion slave1 accepted.
+Salt on nyt käytettävissä (lokaalina tehty harjoittelu riitää tälle kertaa).
+
+a)
+Luodaan tiedosto yksittäisellä komentorivillä:
+
+  $ sudo salt-call --local state.single file.managed /tmp/jpwashere contents="Täällä on nyt sisältöä"
+Komentoriville tulostuu tiedot tiedoston luomisesta. Varmistetaan tiedoston olemassaolo siitä huolimatta:
+  $ ls /tmp/jpwashere
+  /tmp/jpwashere
+  $ cat /tmp/jpwashere
+  Täällä on nyt sisältöä
+Tiedosto on tämän perusteella luotu onnistuneesti.
+
+b)
+Luodaan hakemisto, tiedosto ja editoidaan sinne tulostus:
+  $ sudo mkdir /srv/salt/foo
+  $ cd /srv/salt/foo
+  $ sudoedit /srv/salt/foo/init.sls
+  /tmp/helloworld:
+    file.managed:
+      - contents: "Heippa maailma!"
+Tallennetaan sulkiessa (ctrl x -> y). Huomaa oikea sisennys (kaksi välilyöntiä). Sitten testataan:
+  $ sudo salt-call --local state.apply foo
+Saadaan samankaltainen tuloste kuin a)-kohdassa, tarkistetaan myös samankaltaisesti:
+  $ ls /tmp/helloworld
+  /tmp/helloworld
+  $ cat /tmp/helloworld
+  Heippa maailma!
+foo-staten ajaminen orjalle vaikuttaa toimivan hyvin!
+
+d)
+grains.items käyttö onnistuu seuraavasti:
+  $ sudo salt-call --local grains.items
+Saatu tuloste on kuitenkin hieman ikävästi luettavissa, putkitetaan perään less:
+  $ sudo salt-call --local grains.items|less
+Nyt tietoja on aavistuksen mukavampi lukea.
+
+e)
+Tehdään idempotentti ajotiedosto kuten b)-kohdassa. Ilmeisesti myöhemmin käytetään apachea, joten asennetaan se samalla koneelle:
+  $ sudo mkdir /srv/salt/apache2
+  $ cd /srv/salt/apache2
+  $ sudoedit init.sls
+  apache2:
+    pkg.installed: []
+    service.running:
+      - require:
+        - pkg: apache2
+Tallennetaan ja ajetaan:
+  $ sudo salt-call --local state.apply apache2
+Saadaan tulostus, että apache2 on asennettu onnistuneesti. Voidaan varmistaa esim. ajamalla komento uudestaan, tulostuksessa mm. rivit:
+  Comment: All specified packages are already installed
+Ja
+  Comment: The service apache2 is already running
+Viittaavat siihen, että apache on nyt onnistuneesti asennettu koneelle.

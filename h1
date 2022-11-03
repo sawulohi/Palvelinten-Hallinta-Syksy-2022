@@ -98,3 +98,9 @@ Saadaan tulostus, että apache2 on asennettu onnistuneesti. Voidaan varmistaa es
 Ja
   Comment: The service apache2 is already running
 Viittaavat siihen, että apache on nyt onnistuneesti asennettu koneelle.
+
+Lähteet:
+https://terokarvinen.com/2020/command-line-basics-revisited/
+https://terokarvinen.com/2018/salt-states-i-want-my-computers-like-this/
+https://terokarvinen.com/2006/raportin-kirjoittaminen-4/?fromSearch=raportin%20kirjoittaminen
+https://github.com/JoonasKulmala/Palvelinten-Hallinta/tree/main/h1

@@ -96,5 +96,5 @@ Tallennetaan ja ajetaan:
 Saadaan tulostus, että apache2 on asennettu onnistuneesti. Voidaan varmistaa esim. ajamalla komento uudestaan, tulostuksessa mm. rivit:
   Comment: All specified packages are already installed
 Ja
-  ´´´Comment: The service apache2 is already running´´´
+  Comment: The service apache2 is already running
 Viittaavat siihen, että apache on nyt onnistuneesti asennettu koneelle.

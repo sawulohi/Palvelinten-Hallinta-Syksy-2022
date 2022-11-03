@@ -82,6 +82,8 @@ Saatu tuloste on kuitenkin hieman ikävästi luettavissa, putkitetaan perään l
 Nyt tietoja on aavistuksen mukavampi lukea.
 
 e) Kokeile jotain toista tilaa kuin file.managed. Tärkeitä ovat pkg.installed, file.managed, service.running, file.symlink, user.present, group.present. Ohjeita saa esim "sudo salt-call --local sys.state_doc pkg.installed|less"
+Ohjeistukset tähän löysin osoitteesta https://github.com/JoonasKulmala/Palvelinten-Hallinta/tree/main/h1
+
 Tehdään idempotentti ajotiedosto kuten b)-kohdassa. Ilmeisesti myöhemmin käytetään apachea, joten asennetaan se samalla koneelle:
   $ sudo mkdir /srv/salt/apache2
   $ cd /srv/salt/apache2

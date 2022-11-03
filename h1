@@ -60,7 +60,6 @@ Tiedosto on tämän perusteella luotu onnistuneesti.
 b) Tee saltille idempotentti, infra koodina hei maailma (siis tiedostosta, /srv/salt/foo.sls)
 Luodaan hakemisto, tiedosto ja editoidaan sinne tulostus:
   $ sudo mkdir /srv/salt/foo
-  $ cd /srv/salt/foo
   $ sudoedit /srv/salt/foo/init.sls
   /tmp/helloworld:
     file.managed:
@@ -86,7 +85,6 @@ Ohjeistukset tähän löysin osoitteesta https://github.com/JoonasKulmala/Palvel
 
 Tehdään idempotentti ajotiedosto kuten b)-kohdassa. Ilmeisesti myöhemmin käytetään apachea, joten asennetaan se samalla koneelle:
   $ sudo mkdir /srv/salt/apache2
-  $ cd /srv/salt/apache2
   $ sudoedit init.sls
   apache2:
     pkg.installed: []

@@ -6,28 +6,39 @@ Testaukset tehty VirtualBoxin kautta Ubuntu 22.04 LTS sekä Debian 11 (Bullseye)
 [Karvinen 2018: Salt Quickstart - Salt Stack Master and Slave on Ubuntu Linux](https://terokarvinen.com/2018/salt-quickstart-salt-stack-master-and-slave-on-ubuntu-linux/)
  - Ohjeistus Salt Masterin ja Salt Minionin asennukseen sekä Minionin konfigurointiin
  - Masterin asennuskomennot ja oman masterin osoitteen selvitys:
-	$ sudo apt-get update
+ 
+	`$ sudo apt-get update
 	$ sudo apt-get -y install salt-master
 	$ hostname -I
-	10.0.2.15
+	10.0.2.15`
+
  - Palomuurin ollessa käytössä portit 4505/tcp ja 4506/tcp tulee avata
  - Slaven asennus ja konfigurointi masteriin yhdistämistä varten:
-	$ sudo apt-get update
+ 
+	`$ sudo apt-get update
 	$ sudo apt-get -y install salt-minion
-	$ sudoedit /etc/salt/minion
+	$ sudoedit /etc/salt/minion`
+
 Laitetaan minion config-tiedostoon masterin osoite ja minionille haluttu nimi.
+
  	master: 10.0.2.15
 	id: minion-1
+
 Tallenna ja poistu editorista. Käynnistä vielä demoni uudelleen, jotta säädetyt asetukset tulevat voimaan:
+
 	$ sudo systemctl restart salt-minion.service
+
  - Hyväksy uuden orjan avain *masterilla*:
-	$ sudo salt-key -A
+ 
+	`$ sudo salt-key -A
 	The following keys are going to be accepted:
 	Unaccepted Keys:
 	minion-1
 	Proceed? [n/Y] Y
-	Key for minion minion-1 accepted.
+	Key for minion minion-1 accepted.`
+
 Testaukset esimerkiksi (*masterilla*):
+
 	$sudo salt '*' cmd.run 'whoami'
 	minion-1:
 	    root
@@ -54,11 +65,13 @@ Testaukset esimerkiksi (*masterilla*):
 
 #### SaltStack Configuration Management (Functions)
  - Funktiot (functions) ovat tilojen (state) "verbejä", eli ne kertovat mitä *tehdään*
- - Yhtenä esimerkkifunktiona käytetään examples.sls-tilaan käytettävää pkg.installed-funktiota: 
-	install vim:
+ - Yhtenä esimerkkifunktiona käytetään examples.sls-tilaan käytettävää pkg.installed-funktiota:
+ 
+`	install vim:
 	  pkg.installed:
 	    - name: vim
 	$sudo salt 'minion1' state.apply examples
+`
  - Sisältää myös esimerkkejä mm.  pakettien poistamisesta (pkg.removed), hakemistojen luomisesta (file.directory) ja palvelujen käynnissäolemisen varmistamisesta (service.running)
  - Kertoo myös, että state.apply eli tilaa ajaessa Salt etsii kohdehakemistosta init.sls-tiedoston ja tekee sen mukaiset asetukset
 
@@ -66,13 +79,16 @@ Testaukset esimerkiksi (*masterilla*):
 ## a) Demonin asetukset. Säädä jokin demoni (asenna+tee asetukset+testaa) package-file-service -rakenteella. Ensin käsin: muista tehdä ja raportoida asennus ensin käsin, vasta sitten automatisoiden. Jos osaat hyvin, voit tehdä jonkin eri asetuksen kuin tunnilla. Harjoitusta varten tulee siis tehdä alusta ja raportoida samalla.
 
 Asensin ensin uudelle minionilleni ssh-paketin (package)
+
 	$sudo apt-get install ssh -y
 
 Testasin ssh:n toimivuutta ottamalla minioniin yhteyden master-koneellani (service) (osoitteen saa selville $hostname -I):
+
 	$ssh kayttaja3@10.0.2.5
 	kayttaja3@10.0.2.5's password:
 
 Yhteys toimi, sillä komentoriviin tuli näkyviin salasanan syötön jälkeen kysely koneen sormenjäljen hyväksymisestä:
+
 	The authenticity of host '10.0.2.5 (10.0.2.5)' can't be established.
 	ED25519 key fingerprint is SHA256:rQWrcUnqNMRiS49HAitUQSy00vYzE99Q7KL2ZLeKlrw.
 	This key is not known by any other names
@@ -101,27 +117,36 @@ Yhteys toimi, sillä komentoriviin tuli näkyviin salasanan syötön jälkeen ky
 	Connection to 10.0.2.5 closed.
 
 Sitten säädin sen asetuksiin ssh:n käyttämään porttia 8888 (file):
+
 	$sudoedit /etc/ssh/sshd_config
 	Port 8888
 
 Tallensin ja poistuin, sitten käynnistin demonin uudestaan jotta muutokset tulevat voimaan:
+
 	$sudo systemctl restart ssh
 
 Kokeilin ottaa uuteen minioniin yhteyttä uudestaan samalla komennolla:
+
 	$ssh kayttaja3@10.0.2.5
 	ssh: connect to host 10.0.2.5 port 22: Connection refused
+	
 ssh näyttää käyttävän oletuksena porttia 22, korjataan tilanne lisäämällä komennon parametreihin uusi portti:
+
 	$ssh kayttaja3@10.0.2.5 -p 8888
 	kayttaja3@10.0.2.5's password:
+	
 Saatiin sama aiemmin saatu tervetuloa-viesti, ja yhteys oli taas käytettävissä.
 
 Sitten sama saltilla masterin kautta minionille. Sotketaan kuitenkin ensin ssh minionilta:
+
 	$sudo apt-get purge ssh -y
 	$sudoedit /etc/ssh/sshd_config
 	lisätään tänne konffitiedostoon jotain tekstiä
+	
 Tallennetaan tiedosto ja poistutaan.
 
 Seuraavaksi siirrytään master-koneelle luomaan halutunlainen Salt-tila:
+
 	$sudo mkdir /srv/salt/ssh
 	$sudo nano /srv/salt/ssh/init.sls
 	ssh:
@@ -137,11 +162,13 @@ Seuraavaksi siirrytään master-koneelle luomaan halutunlainen Salt-tila:
 	      - file: /etc/ssh/sshd_config
 
 Tämän lisäksi luotuun hakemistoon tarvitaan myös tiedosto, jota state voi jakaa myös minioneille. Tämä saadaan vaikka masterilta kopioimalla:
+
 	$sudo cp /etc/ssh/sshd_config /srv/salt/ssh/
 	$sudoedit /srv/salt/ssh/srv/salt/ssh/sshd_config
 	Port 8888
 
 Tallensin, poistuin ja ajoin uuden salt-tilan:
+
 	$sudo salt '*' state.apply ssh
 	good_ubuntu:
 	----------
@@ -203,30 +230,39 @@ b)
 Tein tämän harjoituksen jo edellisellä viikolla (h1 tehtävissä). Tässä kertauksena:
 
 Ohjeet saatu: [https://terokarvinen.com/2018/salt-quickstart-salt-stack-master-and-slave-on-ubuntu-linux/](https://terokarvinen.com/2018/salt-quickstart-salt-stack-master-and-slave-on-ubuntu-linux/)
-  $ sudo apt-get update
-  $ sudo apt-get -y install salt-master
-  $ sudo apt-get -y install salt-minion
-arkistin oman osoitteeni seuraavaksi:
-  $ hostname -I
+
+	$ sudo apt-get update
+  	$ sudo apt-get -y install salt-master
+  	$ sudo apt-get -y install salt-minion
+  
+Tarkistin oman osoitteeni seuraavaksi:
+
+ 	$ hostname -I
+  
 Lisäsin nämä saltin configeihin:
-  $ sudoedit /etc/salt/minion
+
+	$ sudoedit /etc/salt/minion
+  
 Lisäsin seuraavat rivit, $HOSTNAME on hostname-komennosta saatu tieto:
-  master: $HOSTNAME
-  id: slave1
+
+	master: $HOSTNAME
+	id: slave1
+  
 Seuraavaksi hyväksyin salt-avaimen:
-  $ sudo salt-key -A
-  The following keys are going to be accepted:
-  Unaccepted Keys:
-  slave1
-  Proceed? [n/Y] Y
-  Key for minion slave1 accepted.
+
+	$ sudo salt-key -A
+	The following keys are going to be accepted:
+	Unaccepted Keys:
+	slave1
+	Proceed? [n/Y] Y
+	Key for minion slave1 accepted.
 
 Toiminnallisuuden testaaminen onnistui näppärästi a)-kohdassa tämän viikon harjoituksia, kun kokeilin ssh:n päivittämistä lähiverkon yli.
 
 ## c) Aja jokin tila paikallisesti ilman master-slave arkkitehtuuria. Analysoi debug-tulostetta. 'sudo salt-call --local state.apply hellotero -l debug'
 
 Ajetaan edellisellä viikolla tehty hello-state:
-	$sudo salt-call --local state.apply hello -l debug
+`	$sudo salt-call --local state.apply hello -l debug
 	[DEBUG   ] Reading configuration from /etc/salt/minion
 	[DEBUG   ] Including configuration from '/etc/salt/minion.d/_schedule.conf'
 	[DEBUG   ] Reading configuration from /etc/salt/minion.d/_schedule.conf
@@ -336,9 +372,9 @@ Ajetaan edellisellä viikolla tehty hello-state:
 	------------
 	Total states run:     2
 	Total run time:  10.727 ms
-	
+`	
 Tulosteen loppuosa vaikuttaa tyypilliseltä salt.staten ajamiselta. Sitä edeltävässä osiossa on kuitenkin paljon rivejä [DEBUG]- tai [INFO]-tägeillä varustettuna.
-	[DEBUG   ] Reading configuration from /etc/salt/minion
+	`[DEBUG   ] Reading configuration from /etc/salt/minion`
 Tämä rivi esimerkiksi vaikuttaa kertovan, että se lukee konfiguraatiotietoja paikallisesta /etc/salt/minion -hakemistosta.
 
 	[DEBUG   ] Rendered data from file: /var/cache/salt/minion/files/base/hello/init.sls:

@@ -262,7 +262,8 @@ Toiminnallisuuden testaaminen onnistui näppärästi a)-kohdassa tämän viikon 
 ## c) Aja jokin tila paikallisesti ilman master-slave arkkitehtuuria. Analysoi debug-tulostetta. 'sudo salt-call --local state.apply hellotero -l debug'
 
 Ajetaan edellisellä viikolla tehty hello-state:
-`	$sudo salt-call --local state.apply hello -l debug
+
+	$sudo salt-call --local state.apply hello -l debug
 	[DEBUG   ] Reading configuration from /etc/salt/minion
 	[DEBUG   ] Including configuration from '/etc/salt/minion.d/_schedule.conf'
 	[DEBUG   ] Reading configuration from /etc/salt/minion.d/_schedule.conf
@@ -371,8 +372,8 @@ Ajetaan edellisellä viikolla tehty hello-state:
 	Failed:    0
 	------------
 	Total states run:     2
-	Total run time:  10.727 ms
-`	
+	Total run time:  10.727 ms 
+
 Tulosteen loppuosa vaikuttaa tyypilliseltä salt.staten ajamiselta. Sitä edeltävässä osiossa on kuitenkin paljon rivejä [DEBUG]- tai [INFO]-tägeillä varustettuna.
 	`[DEBUG   ] Reading configuration from /etc/salt/minion`
 Tämä rivi esimerkiksi vaikuttaa kertovan, että se lukee konfiguraatiotietoja paikallisesta /etc/salt/minion -hakemistosta.
@@ -389,6 +390,7 @@ Tässä näkyy selkeästi init.sls -tiedoston sisältö, vaikka lähtökansio on
 	[INFO    ] Running state [/tmp/hellojp123] at time 20:28:04.735935
 	[INFO    ] Executing state file.managed for [/tmp/hellojp123]
 	[INFO    ] Completed state [/tmp/toka] at time 20:28:04.746816 (duration_in_ms=2.662)
+	
 INFO-tägein varustellut rivit näyttävät olevan lokitietoja, kuten aikaleimoja tai tehtyjä operaatioita.
 
 

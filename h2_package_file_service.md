@@ -7,10 +7,10 @@ Testaukset tehty VirtualBoxin kautta Ubuntu 22.04 LTS sekä Debian 11 (Bullseye)
  - Ohjeistus Salt Masterin ja Salt Minionin asennukseen sekä Minionin konfigurointiin
  - Masterin asennuskomennot ja oman masterin osoitteen selvitys:
  
-	`$ sudo apt-get update
-	$ sudo apt-get -y install salt-master
-	$ hostname -I
-	10.0.2.15`
+		$ sudo apt-get update
+		$ sudo apt-get -y install salt-master
+		$ hostname -I
+		10.0.2.15
 
  - Palomuurin ollessa käytössä portit 4505/tcp ja 4506/tcp tulee avata
  - Slaven asennus ja konfigurointi masteriin yhdistämistä varten:

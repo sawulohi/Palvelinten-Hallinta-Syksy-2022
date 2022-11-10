@@ -225,9 +225,10 @@ Tallensin, poistuin ja ajoin uuden salt-tilan:
 		
 Staten ajaminen siis tapahtui onnistuneesti. Myös aiemmin tehty sotku konffitiedostoon näkyy tehdyissä muutoksissa.
 
-b)
+## b) Asenna Salt herra-orja niin, että molemmat ovat samalla koneella. Voit tehdä ne esimerkiksi uudelle virtuaalikoneelle, niin pääset kokeilemaan puhtaalta pöydältä.
 
 Tein tämän harjoituksen jo edellisellä viikolla (h1 tehtävissä). Tässä kertauksena:
+
 
 Ohjeet saatu: [https://terokarvinen.com/2018/salt-quickstart-salt-stack-master-and-slave-on-ubuntu-linux/](https://terokarvinen.com/2018/salt-quickstart-salt-stack-master-and-slave-on-ubuntu-linux/)
 
@@ -246,16 +247,16 @@ Lisäsin nämä saltin configeihin:
 Lisäsin seuraavat rivit, $HOSTNAME on hostname-komennosta saatu tieto:
 
 		master: $HOSTNAME
-		id: slave1
+		id: minion-1
 	  
 Seuraavaksi hyväksyin salt-avaimen:
 
 		$ sudo salt-key -A
 		The following keys are going to be accepted:
 		Unaccepted Keys:
-		slave1
+		minion-1
 		Proceed? [n/Y] Y
-		Key for minion slave1 accepted.
+		Key for minion minion-1 accepted.
 
 Toiminnallisuuden testaaminen onnistui näppärästi a)-kohdassa tämän viikon harjoituksia, kun kokeilin ssh:n päivittämistä lähiverkon yli.
 

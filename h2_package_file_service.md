@@ -15,18 +15,18 @@ Testaukset tehty VirtualBoxin kautta Ubuntu 22.04 LTS sekä Debian 11 (Bullseye)
  - Palomuurin ollessa käytössä portit 4505/tcp ja 4506/tcp tulee avata
  - Slaven asennus ja konfigurointi masteriin yhdistämistä varten:
  
-	`$ sudo apt-get update
-	$ sudo apt-get -y install salt-minion
-	$ sudoedit /etc/salt/minion`
+		$ sudo apt-get update
+		$ sudo apt-get -y install salt-minion
+		$ sudoedit /etc/salt/minion
 
 Laitetaan minion config-tiedostoon masterin osoite ja minionille haluttu nimi.
 
- 	master: 10.0.2.15
-	id: minion-1
+	 	master: 10.0.2.15
+		id: minion-1
 
 Tallenna ja poistu editorista. Käynnistä vielä demoni uudelleen, jotta säädetyt asetukset tulevat voimaan:
 
-	$ sudo systemctl restart salt-minion.service
+		$ sudo systemctl restart salt-minion.service
 
  - Hyväksy uuden orjan avain *masterilla*:
  

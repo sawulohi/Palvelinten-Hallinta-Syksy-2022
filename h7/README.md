@@ -1,3 +1,5 @@
+# Actual report [HERE](report.md)
+
 # h7 Mini module for a new desktop environment using SaltStack
 
 This project will be using [Debian/Bullseye64](https://www.debian.org/download) and [Ubuntu22.04.1 LTS](https://releases.ubuntu.com/22.04.1/ubuntu-22.04.1-desktop-amd64.iso).
